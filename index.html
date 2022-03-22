@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./tailwindfinal.css" />
+    <title>Document</title>
+  </head>
+  <body class="bg-violet-100">
+    <main
+      class="appContainer bg-[#f8f8f8] rounded-2xl shadow-2xl border-4 border-[#828282] shadow-violet-500/50"
+    >
+      <div class="app"></div>
+      <!-- <div class="siblings"></div> -->
+      <!-- <div class="bg-white eachBlock rounded p-4 grid grid-rows-4 gap-4">
+        <div class="details-data border border-sky-500 rounded overflow-hidden">
+          <p class="bg-gray-200 p-2 border-r border-sky-500">DATA</p>
+          <input
+            class="p-2 inline-block data-input"
+            type="text"
+            placeholder="Enter Data"
+            name=""
+            id=""
+          />
+        </div>
+
+        <div
+          class="details-previousHash border border-sky-500 rounded overflow-hidden"
+        >
+          <p class="bg-gray-200 p-2 border-r border-sky-500">PREVIOUS HASH</p>
+          <p class="p-2 previousHash">0</p>
+        </div>
+
+        <div class="details-hash border border-sky-500 rounded overflow-hidden">
+          <p class="bg-gray-200 p-2 border-r border-sky-500">HASH</p>
+          <p class="p-2 hash">xyzhsd</p>
+        </div>
+
+        <div class="details-other flex justify-between">
+          <div
+            class="details-date border border-sky-500 rounded overflow-hidden"
+          >
+            <p class="bg-gray-200 p-2 border-r border-sky-500">DATE</p>
+            <p class="p-2 date">01/11/2022</p>
+          </div>
+
+          <div
+            class="details-nonce border border-sky-500 rounded overflow-hidden text-right inline-block"
+          >
+            <p class="bg-gray-200 p-2 border-r border-sky-500">NONCE</p>
+            <p class="p-2 nonce">11203</p>
+          </div>
+        </div>
+      </div> -->
+    </main>
+    <form
+      action=""
+      autocomplete="off"
+      class="border border-[#d9d9d9] shadow-2xl shadow-violet-500/50 rounded-2xl bg-[#f8f8f8] px-12 py-4 w-5/12 mx-auto my-12 flex justify-between"
+    >
+      <input
+        class="px-5 text-base text-violet-800 border font-semibold border-violet-500 focus:outline-violet-800 focus:ring-2 rounded-full newData"
+        type="text"
+        name="newData"
+        placeholder="Enter Data"
+        id=""
+      />
+      <button
+        class="mx-auto p-4 bg-violet-800 ease-in-out duration-200 hover:drop-shadow-lg active:translate-y-1 hover:drop-shadow-violet-500/50 rounded-3xl btn-submit text-[#f8f8f8] font-semibold"
+        type="submit"
+      >
+        ADD BLOCK
+      </button>
+    </form>
+
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.js"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
