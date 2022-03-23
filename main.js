@@ -1,7 +1,8 @@
-// const SHA256 = require("crypto-js/sha256");
+// const SHA256 = require('crypto-js/sha256');
 const containerApp = document.querySelector(".app");
-const newData = document.querySelector(".newData");
+const inputData = document.querySelector(".newData");
 const btnSubmit = document.querySelector(".btn-submit");
+
 class Block {
   constructor(index, timestamp, data, previousHash = "") {
     this.index = index;
@@ -9,43 +10,35 @@ class Block {
     this.data = data;
     this.previousHash = previousHash;
     this.nonce = 0;
-    this.valid = true;
-    this.hash = this.calculateHash();
-    this.newHash = this.hash;
+    this.originalHash = this.calculateHash();
+    this.hash = this.originalHash;
   }
 
   calculateHash() {
     return CryptoJS.SHA256(
-      // return SHA256(
-      this.index +
-        this.previousHash +
-        this.timestamp +
-        JSON.stringify(this.data) +
-        this.nonce
+      this.index + this.previousHash + JSON.stringify(this.data) + this.nonce
     ).toString();
   }
 
   mineBlock(difficulty) {
-    // this.nonce = 0;
     while (
       this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")
     ) {
       this.nonce++;
       this.hash = this.calculateHash();
     }
-    this.newHash = this.hash;
-    return this.hash;
+    this.originalHash = this.hash;
   }
 }
 
 class Blockchain {
   constructor() {
     this.difficulty = 2;
-    this.chain = [this.createGenenisBlock()];
+    this.chain = [this.createGenesisBlock()];
     this.displayBlocks();
   }
 
-  createGenenisBlock() {
+  createGenesisBlock() {
     return new Block(0, "01/03/2022", "Genesis Block", "0");
   }
 
@@ -53,73 +46,34 @@ class Blockchain {
     return this.chain[this.chain.length - 1];
   }
 
-  generateNextBlock(timestamp, data) {
+  generateNextBlock(data) {
     const index = this.getLatestBlock().index + 1;
-    const nextBlock = new Block(index, timestamp, data);
-    this.addBlock(nextBlock);
-  }
-
-  addBlock(newBlock) {
-    newBlock.previousHash = this.getLatestBlock().newHash;
+    const newBlock = new Block(
+      index,
+      "31/03/2022",
+      data,
+      this.getLatestBlock().hash
+    );
     newBlock.mineBlock(this.difficulty);
     this.chain.push(newBlock);
-    this.isChainValid();
-    this.displayBlocks(this.chain);
-  }
-
-  isChainValid() {
-    let i;
-    for (i = 1; i < this.chain.length; i++) {
-      const currentBlock = this.chain[i];
-      const previousBlock = this.chain[i - 1];
-      if (
-        currentBlock.hash !== currentBlock.newHash ||
-        currentBlock.previousHash !== previousBlock.hash ||
-        previousBlock.valid === false
-      ) {
-        this.chain[i].valid = false;
-        break;
-      } else {
-        this.chain[i].valid = true;
-      }
-    }
-
-    if (i !== this.chain.length) {
-      while (i < this.chain.length) {
-        this.chain[i].valid = false;
-        console.log(
-          this.chain[i].previousHash,
-          this.chain[i].hash,
-          this.chain[i].newHash
-        );
-        this.chain[i].previousHash = this.chain[i - 1].newHash;
-        this.chain[i].newHash = this.chain[i].calculateHash();
-        i++;
-      }
-      this.displayBlocks();
-      return false;
-    } else {
-      this.displayBlocks();
-      return true;
-    }
+    this.displayBlocks();
   }
 
   displayBlocks() {
     containerApp.innerHTML = "";
-    const isChainValidWithThis = this.isChainValid.bind(this);
     const thisInst = this;
     this.chain.forEach(function (block, i) {
       const html = `
-    <div data-valid=${block.valid} data-index=${
-        block.index
-      } class="eachBlock rounded-3xl p-4 m-8 grid grid-rows-4 gap-4 shadow-lg ${
-        block.hash === block.newHash
-          ? "border-2 border-green-400 bg-[#fcfffd] shadow-green-400"
+    <div data-index=${
+      block.index
+    } class="eachBlock rounded-3xl p-4 m-8 grid grid-rows-4 gap-4 shadow-lg ${
+        block.hash === block.originalHash
+          ? "border-2 border-green-400 bg-[#f6ffee] shadow-green-400"
           : "border-2 border-rose-500 bg-rose-100 shadow-rose-500"
       }">
         <div class="details-data border border-[#d9d9d9] rounded overflow-hidden">
           <p class="${
-            block.hash === block.newHash ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+            block.hash === block.originalHash ? "bg-[#e7f9d7]" : "bg-[#fed4dc]"
           } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">DATA</p>
           <input
             class="p-2 -ml-1 w-11/12 text-[#7d7d7d] font-semibold inline-block data-input bg-transparent ${
@@ -138,7 +92,7 @@ class Blockchain {
           class="details-previousHash border border-[#d9d9d9] rounded overflow-hidden"
         >
           <p class=" ${
-            block.hash === block.newHash ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+            block.hash === block.originalHash ? "bg-[#e7f9d7]" : "bg-[#fed4dc]"
           } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">PREVIOUS HASH</p>
           <p class="p-2 text-[#5eb8ff] font-semibold previousHash -ml-1">${
             block.previousHash
@@ -146,17 +100,21 @@ class Blockchain {
         </div>
 
         <div class="details-hash border ${
-          block.hash === block.newHash ? "border-[#B7EB8F]" : "border-[#ffdce2]"
+          block.hash === block.originalHash
+            ? "border-[#B7EB8F]"
+            : "border-[#ffdce2]"
         } rounded overflow-hidden ${
-        block.hash === block.newHash ? "bg-[#f6ffee]" : "bg-[#ffe2e7]"
+        block.hash === block.originalHash ? "bg-[#f6ffee]" : "bg-[#ffe2e7]"
       }">
-          <p class="text-[#575757] font-medium p-2 border-r border-[#d9d9d9">CURRENT HASH</p>
+          <p class="text-[#575757] ${
+            block.hash === block.originalHash ? "bg-[#e7f9d7]" : "bg-[#fed4dc]"
+          } font-medium p-2 border-r border-[#d9d9d9">CURRENT HASH</p>
           <p class="p-2 hash ${
-            block.hash == block.calculateHash()
+            block.hash == block.originalHash
               ? "text-[#44ab11]"
               : "text-[#f43f5e]"
-          } font-semibold -ml-1" id="hash" data-value="${block.hash}">${
-        block.newHash
+          } font-semibold -ml-1" id="hash" data-value="${block.originalHash}">${
+        block.hash
       }</p>
         </div>
 
@@ -165,7 +123,9 @@ class Blockchain {
             class="details-date border border-[#d9d9d9] rounded overflow-hidden"
           >
             <p class=" ${
-              block.hash === block.newHash ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+              block.hash === block.originalHash
+                ? "bg-[#e7f9d7]"
+                : "bg-[#fed4dc]"
             } text-[#575757] p-2 border-r border-[#d9d9d9]">DATE</p>
             <p class="p-2 date text-[#575757] font-normal">${
               block.timestamp
@@ -174,22 +134,24 @@ class Blockchain {
 
           <div
             class="details-nonce border border-[#d9d9d9] rounded overflow-hidden text-right inline-block ${
-              block.hash === block.newHash ? "inherit" : "hidden"
+              block.hash === block.originalHash ? "inherit" : "hidden"
             }"
           >
             <p class=" ${
-              block.hash === block.newHash ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+              block.hash === block.originalHash
+                ? "bg-[#e7f9d7]"
+                : "bg-[#fed4dc]"
             } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">NONCE</p>
             <p class="p-2 nonce text-[#575757] font-normal">${block.nonce}</p>
           </div>
 
           <div
             class="details-nonce border border-[#d9d9d9] rounded overflow-hidden text-right inline-block ${
-              block.hash === block.newHash ? "hidden" : "inherit"
+              block.hash === block.originalHash ? "hidden" : "inherit"
             }""
           >
             <button
-              class="bg-white py-2 px-4 bg-violet-800 ease-in-out duration-200 hover:drop-shadow-lg active:translate-y-0.5 hover:drop-shadow-violet-500/50 rounded-3xl btn-mine text-[#f8f8f8] font-semibold" 
+              class="py-2 px-4 ease-in-out duration-200 drop-shadow-lg active:translate-y-0.5 rounded-3xl btn-mine text-[#f8f8f8] font-semibold mine" 
               type="submit"
               data-index=${block.index}
               data-valid=${block.valid}>
@@ -205,7 +167,7 @@ class Blockchain {
     const allBlocks = document.querySelectorAll(".eachBlock");
 
     const btnMine = document.querySelectorAll(".btn-mine");
-    // console.log(btnMine);
+
     btnMine.forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         const block = thisInst.chain.find(
@@ -222,26 +184,34 @@ class Blockchain {
           }
         }
 
-        if (!block.valid && prevBlock.valid) {
-          console.log(block);
-          block.data = htmlBlock.querySelector(".data-input").value;
-          block.previousHash = prevBlock.hash;
-          block.hash = block.calculateHash();
-          block.mineBlock(thisInst.difficulty);
-          block.valid = true;
-          thisInst.displayBlocks();
-          // console.log(block);
+        block.data = htmlBlock.querySelector(".data-input").value;
+        block.previousHash = prevBlock.hash;
+        // block.hash = block.calculateHash();
+        block.mineBlock(thisInst.difficulty);
+        const index = block.index;
+        for (let i = index + 1; i < thisInst.chain.length; i++) {
+          thisInst.chain[i].previousHash = thisInst.chain[i - 1].hash;
+          thisInst.chain[i].hash = thisInst.chain[i].calculateHash();
         }
+        thisInst.displayBlocks();
       });
     });
 
     allBlocks.forEach(function (htmlBlock) {
       htmlBlock.addEventListener("change", function (e) {
         const hash = this.querySelector("#hash").dataset.value;
-        const block = thisInst.chain.find((block) => block.hash === hash);
+        const block = thisInst.chain.find(
+          (block) => block.originalHash === hash
+        );
         block.data = e.target.value;
-        block.newHash = block.calculateHash();
-        isChainValidWithThis();
+        block.hash = block.calculateHash();
+        const index = block.index;
+        for (let i = index + 1; i < thisInst.chain.length; i++) {
+          console.log();
+          thisInst.chain[i].previousHash = thisInst.chain[i - 1].hash;
+          thisInst.chain[i].hash = thisInst.chain[i].calculateHash();
+        }
+        thisInst.displayBlocks();
       });
     });
   }
@@ -252,6 +222,6 @@ let demoChain = new Blockchain();
 btnSubmit.addEventListener("click", function (e) {
   e.preventDefault();
   // demoChain.generateNextBlock("22/02/2022", +newData.value);
-  demoChain.generateNextBlock("22/02/2022", newData.value);
-  newData.value = "";
+  demoChain.generateNextBlock(inputData.value);
+  inputData.value = "";
 });

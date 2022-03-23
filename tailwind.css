@@ -32,13 +32,11 @@ body {
   transition: 0.5s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  /* background: rgb(222, 220, 255);
-  background: linear-gradient(
-    25deg,
-    rgba(222, 220, 255, 1) 0%,
-    rgb(180, 191, 201) 100%,
-    rgb(136, 144, 146) 100%
-  ); */
+  background-image: linear-gradient(
+    to top left,
+    rgba(245, 230, 25, 0.8) 0%,
+    rgba(158, 70, 241, 0.8) 100%
+  );
 }
 
 html {
@@ -60,4 +58,32 @@ input:focus {
   overflow-y: scroll;
   padding: 20px;
   margin: 0 auto;
+  box-shadow: 0 2rem 50rem rgba(0, 0, 0, 0.55);
+  background-color: rgba(219, 225, 231, 0.4);
+}
+
+.addForm {
+  box-shadow: 0 2rem 50rem rgba(0, 0, 0, 0.55);
+  background-color: rgba(219, 225, 231, 0.4);
+}
+
+.newData {
+  background-color: #ffffff7a;
+}
+
+.btn {
+  box-shadow: 0 2rem 50rem rgba(0, 0, 0, 0.55);
+  background-image: linear-gradient(
+    to top left,
+    rgb(109, 25, 245) 0%,
+    rgba(158, 70, 241, 1) 100%
+  );
+}
+.mine {
+  box-shadow: 0 2rem 50rem rgba(0, 0, 0, 0.55);
+  background-image: linear-gradient(
+    to top left,
+    rgb(80, 170, 243) 0%,
+    rgb(18, 70, 212) 100%
+  );
 }
