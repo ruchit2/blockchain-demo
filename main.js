@@ -112,7 +112,9 @@ class Blockchain {
           : "border-2 border-rose-500 bg-rose-100 shadow-rose-500"
       }">
         <div class="details-data border border-[#d9d9d9] rounded overflow-hidden">
-          <p class="bg-[#fafafa] text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">DATA</p>
+          <p class="${
+            block.valid ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+          } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">DATA</p>
           <input
             class="p-2 -ml-1 w-11/12 text-[#7d7d7d] font-semibold inline-block data-input bg-transparent ${
               i === 0 && "cursor-not-allowed"
@@ -129,13 +131,19 @@ class Blockchain {
         <div
           class="details-previousHash border border-[#d9d9d9] rounded overflow-hidden"
         >
-          <p class="bg-[#fafafa] text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">PREVIOUS HASH</p>
+          <p class=" ${
+            block.valid ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+          } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">PREVIOUS HASH</p>
           <p class="p-2 text-[#5eb8ff] font-semibold previousHash -ml-1">${
             block.previousHash
           }</p>
         </div>
 
-        <div class="details-hash border border-[#B7EB8F] rounded overflow-hidden bg-[#f6ffee]">
+        <div class="details-hash border ${
+          block.valid ? "border-[#B7EB8F]" : "border-[#ffdce2]"
+        } rounded overflow-hidden ${
+        block.valid ? "bg-[#f6ffee]" : "bg-[#ffe2e7]"
+      }">
           <p class="text-[#575757] font-medium p-2 border-r border-[#d9d9d9">CURRENT HASH</p>
           <p class="p-2 hash ${
             block.hash == block.calculateHash()
@@ -150,7 +158,9 @@ class Blockchain {
           <div
             class="details-date border border-[#d9d9d9] rounded overflow-hidden"
           >
-            <p class="bg-[#fafafa] text-[#575757] p-2 border-r border-[#d9d9d9]">DATE</p>
+            <p class=" ${
+              block.valid ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+            } text-[#575757] p-2 border-r border-[#d9d9d9]">DATE</p>
             <p class="p-2 date text-[#575757] font-normal">${
               block.timestamp
             }</p>
@@ -161,7 +171,9 @@ class Blockchain {
               block.valid ? "inherit" : "hidden"
             }"
           >
-            <p class="bg-[#fafafa] text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">NONCE</p>
+            <p class=" ${
+              block.valid ? "bg-[#fafafa]" : "bg-[#ffe2e7]"
+            } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">NONCE</p>
             <p class="p-2 nonce text-[#575757] font-normal">${block.nonce}</p>
           </div>
 
