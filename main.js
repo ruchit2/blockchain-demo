@@ -26,12 +26,14 @@ class Block {
 
   mineBlock(difficulty) {
     // this.nonce = 0;
+    console.log(this.data, this.hash);
     while (
       this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")
     ) {
       this.nonce++;
       this.hash = this.calculateHash();
     }
+    console.log(this.data, this.hash);
     return this.hash;
   }
 }
@@ -59,6 +61,7 @@ class Blockchain {
 
   addBlock(newBlock) {
     newBlock.previousHash = this.getLatestBlock().hash;
+    console.log(newBlock);
     newBlock.mineBlock(this.difficulty);
     this.chain.push(newBlock);
     this.isChainValid();
@@ -76,7 +79,6 @@ class Blockchain {
         previousBlock.valid === false
       ) {
         this.chain[i].valid = false;
-        console.log(currentBlock.hash, currentBlock.calculateHash());
         break;
       } else {
         this.chain[i].valid = true;
@@ -102,11 +104,13 @@ class Blockchain {
     const thisInst = this;
     this.chain.forEach(function (block, i) {
       const html = `
-    <div class="eachBlock rounded-3xl p-4 m-8 grid grid-rows-4 gap-4 shadow-lg ${
-      block.valid
-        ? "border-2 border-green-400 bg-[#fcfffd] shadow-green-400"
-        : "border-2 border-rose-500 bg-rose-100 shadow-rose-500"
-    }">
+    <div data-valid=${block.valid} data-index=${
+        block.index
+      } class="eachBlock rounded-3xl p-4 m-8 grid grid-rows-4 gap-4 shadow-lg ${
+        block.valid
+          ? "border-2 border-green-400 bg-[#fcfffd] shadow-green-400"
+          : "border-2 border-rose-500 bg-rose-100 shadow-rose-500"
+      }">
         <div class="details-data border border-[#d9d9d9] rounded overflow-hidden">
           <p class="bg-[#fafafa] text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">DATA</p>
           <input
@@ -153,10 +157,26 @@ class Blockchain {
           </div>
 
           <div
-            class="details-nonce border border-[#d9d9d9] rounded overflow-hidden text-right inline-block"
+            class="details-nonce border border-[#d9d9d9] rounded overflow-hidden text-right inline-block ${
+              block.valid ? "inherit" : "hidden"
+            }"
           >
             <p class="bg-[#fafafa] text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">NONCE</p>
             <p class="p-2 nonce text-[#575757] font-normal">${block.nonce}</p>
+          </div>
+
+          <div
+            class="details-nonce border border-[#d9d9d9] rounded overflow-hidden text-right inline-block ${
+              block.valid ? "hidden" : "inherit"
+            }""
+          >
+            <button
+              class="bg-white py-2 px-4 bg-violet-800 ease-in-out duration-200 hover:drop-shadow-lg active:translate-y-0.5 hover:drop-shadow-violet-500/50 rounded-3xl btn-mine text-[#f8f8f8] font-semibold" 
+              type="submit"
+              data-index=${block.index}
+              data-valid=${block.valid}>
+                Mine
+            </button>
           </div>
         </div>
       </div>
@@ -165,10 +185,41 @@ class Blockchain {
     });
 
     const allBlocks = document.querySelectorAll(".eachBlock");
+
+    const btnMine = document.querySelectorAll(".btn-mine");
+    // console.log(btnMine);
+    btnMine.forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        const block = thisInst.chain.find(
+          (block) => block.index === +e.target.dataset.index
+        );
+        const prevBlock = thisInst.chain.find(
+          (curr) => curr.index === block.index - 1
+        );
+        let htmlBlock;
+        for (let j = 0; j < allBlocks.length; j++) {
+          if (allBlocks[j].dataset.index === e.target.dataset.index) {
+            htmlBlock = allBlocks[j];
+            break;
+          }
+        }
+
+        if (!block.valid && prevBlock.valid) {
+          console.log(block);
+          block.data = htmlBlock.querySelector(".data-input").value;
+          block.previousHash = prevBlock.hash;
+          block.hash = block.calculateHash();
+          block.mineBlock(thisInst.difficulty);
+          block.valid = true;
+          thisInst.displayBlocks();
+          // console.log(block);
+        }
+      });
+    });
+
     allBlocks.forEach(function (htmlBlock) {
       htmlBlock.addEventListener("change", function (e) {
         const hash = this.querySelector("#hash").dataset.value;
-        console.log(hash);
         const block = thisInst.chain.find((block) => block.hash === hash);
         block.data = e.target.value;
         isChainValidWithThis();

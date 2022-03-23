@@ -43,6 +43,7 @@ body {
 
 html {
   scroll-behavior: smooth;
+  transition: all ease-in-out 0.2s;
 }
 
 p {
