@@ -146,7 +146,7 @@ class Blockchain {
           </div>
 
           <div
-            class="details-nonce border border-[#d9d9d9] rounded overflow-hidden text-right inline-block ${
+            class="rounded text-right inline-block ${
               block.hash === block.originalHash ? "hidden" : "inherit"
             }""
           >
