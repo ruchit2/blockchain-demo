@@ -16,7 +16,11 @@ class Block {
 
   calculateHash() {
     return CryptoJS.SHA256(
-      this.index + this.previousHash + JSON.stringify(this.data) + this.nonce
+      this.index +
+        this.timestamp +
+        this.previousHash +
+        JSON.stringify(this.data) +
+        this.nonce
     ).toString();
   }
 
@@ -39,18 +43,18 @@ class Blockchain {
   }
 
   createGenesisBlock() {
-    return new Block(0, "01/03/2022", "Genesis Block", "0");
+    return new Block(0, new Date().toLocaleDateString(), "Genesis Block", "0");
   }
 
   getLatestBlock() {
     return this.chain[this.chain.length - 1];
   }
 
-  generateNextBlock(data) {
+  generateNextBlock(timestamp, data) {
     const index = this.getLatestBlock().index + 1;
     const newBlock = new Block(
       index,
-      "31/03/2022",
+      timestamp,
       data,
       this.getLatestBlock().hash
     );
@@ -222,6 +226,6 @@ let demoChain = new Blockchain();
 btnSubmit.addEventListener("click", function (e) {
   e.preventDefault();
   // demoChain.generateNextBlock("22/02/2022", +newData.value);
-  demoChain.generateNextBlock(inputData.value);
+  demoChain.generateNextBlock(new Date().toLocaleDateString(), inputData.value);
   inputData.value = "";
 });
