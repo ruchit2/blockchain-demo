@@ -202,7 +202,7 @@ class Blockchain {
     });
 
     allBlocks.forEach(function (htmlBlock) {
-      /* htmlBlock.addEventListener("change", function (e) {
+      htmlBlock.addEventListener("change", function (e) {
         const hash = this.querySelector("#hash").dataset.value;
         const block = thisInst.chain.find(
           (block) => block.originalHash === hash
@@ -216,9 +216,10 @@ class Blockchain {
           thisInst.chain[i].hash = thisInst.chain[i].calculateHash();
         }
         thisInst.displayBlocks();
-      }); */
+      });
 
-      $(htmlBlock).on("input", function () {
+      /* $(htmlBlock).on("input", function (e) {
+        console.log(e.target.value);
         const hash = this.querySelector("#hash").dataset.value;
         const block = thisInst.chain.find(
           (block) => block.originalHash === hash
@@ -232,7 +233,7 @@ class Blockchain {
           thisInst.chain[i].hash = thisInst.chain[i].calculateHash();
         }
         thisInst.displayBlocks();
-      });
+      }); */
     });
   }
 }
