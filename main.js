@@ -202,12 +202,28 @@ class Blockchain {
     });
 
     allBlocks.forEach(function (htmlBlock) {
-      htmlBlock.addEventListener("change", function (e) {
+      /* htmlBlock.addEventListener("change", function (e) {
         const hash = this.querySelector("#hash").dataset.value;
         const block = thisInst.chain.find(
           (block) => block.originalHash === hash
         );
         block.data = e.target.value;
+        block.hash = block.calculateHash();
+        const index = block.index;
+        for (let i = index + 1; i < thisInst.chain.length; i++) {
+          console.log();
+          thisInst.chain[i].previousHash = thisInst.chain[i - 1].hash;
+          thisInst.chain[i].hash = thisInst.chain[i].calculateHash();
+        }
+        thisInst.displayBlocks();
+      }); */
+
+      $(htmlBlock).on("input", function () {
+        const hash = this.querySelector("#hash").dataset.value;
+        const block = thisInst.chain.find(
+          (block) => block.originalHash === hash
+        );
+        block.data = this.firstElementChild.lastElementChild.value;
         block.hash = block.calculateHash();
         const index = block.index;
         for (let i = index + 1; i < thisInst.chain.length; i++) {
