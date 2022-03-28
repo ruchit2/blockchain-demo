@@ -80,15 +80,13 @@ class Blockchain {
             block.hash === block.originalHash ? "bg-[#e7f9d7]" : "bg-[#fed4dc]"
           } text-[#575757] font-medium p-2 border-r border-[#d9d9d9]">DATA</p>
           <input
-            class="p-2 -ml-1 w-11/12 text-[#7d7d7d] font-semibold inline-block data-input bg-transparent ${
-              i === 0 && "cursor-not-allowed"
-            }"
+            class="p-2 -ml-1 w-11/12 text-[#7d7d7d] font-semibold inline-block data-input bg-transparent "
             type="text"
             value="${block.data}"
             name=""
             size = "10
             id=""
-            ${i === 0 && "disabled"}
+            
           />
         </div>
 
@@ -189,7 +187,7 @@ class Blockchain {
         }
 
         block.data = htmlBlock.querySelector(".data-input").value;
-        block.previousHash = prevBlock.hash;
+        block.previousHash = prevBlock?.hash ?? 0;
         // block.hash = block.calculateHash();
         block.mineBlock(thisInst.difficulty);
         const index = block.index;
