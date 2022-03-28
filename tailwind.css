@@ -34,8 +34,8 @@ body {
   -webkit-tap-highlight-color: transparent;
   background-image: linear-gradient(
     to top left,
-    rgba(245, 230, 25, 0.8) 0%,
-    rgba(158, 70, 241, 0.8) 100%
+    rgba(241, 227, 250, 0.671) 0%,
+    rgba(167, 77, 252, 0.699) 100%
   );
 }
 
@@ -59,7 +59,7 @@ input:focus {
   padding: 20px;
   margin: 0 auto;
   box-shadow: 0 2rem 50rem rgba(0, 0, 0, 0.55);
-  background-color: rgba(219, 225, 231, 0.4);
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 .addForm {
