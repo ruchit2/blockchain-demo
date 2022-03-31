@@ -37,13 +37,20 @@ class Block {
 
 class Blockchain {
   constructor() {
-    this.difficulty = 2;
+    this.difficulty = 3;
     this.chain = [this.createGenesisBlock()];
     this.displayBlocks();
   }
 
   createGenesisBlock() {
-    return new Block(0, new Date().toLocaleDateString(), "Genesis Block", "0");
+    const newBlock = new Block(
+      0,
+      new Date().toLocaleString(),
+      "Genesis Block",
+      "0"
+    );
+    newBlock.mineBlock(this.difficulty);
+    return newBlock;
   }
 
   getLatestBlock() {
@@ -241,6 +248,6 @@ let demoChain = new Blockchain();
 btnSubmit.addEventListener("click", function (e) {
   e.preventDefault();
   // demoChain.generateNextBlock("22/02/2022", +newData.value);
-  demoChain.generateNextBlock(new Date().toLocaleDateString(), inputData.value);
+  demoChain.generateNextBlock(new Date().toLocaleString(), inputData.value);
   inputData.value = "";
 });
