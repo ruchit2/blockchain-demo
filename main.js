@@ -14,6 +14,7 @@ class Block {
     this.hash = this.originalHash;
   }
 
+  // returns the hash of the block based on current data
   calculateHash() {
     return CryptoJS.SHA256(
       this.index +
@@ -24,6 +25,7 @@ class Block {
     ).toString();
   }
 
+  // finds the hash of the block that meets the difficulty requirement, and makes this hash the block's hash
   mineBlock(difficulty) {
     while (
       this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")
@@ -36,12 +38,14 @@ class Block {
 }
 
 class Blockchain {
+  // creates the chain, adds the genesis block, and calls displayBlocks
   constructor() {
     this.difficulty = 3;
     this.chain = [this.createGenesisBlock()];
     this.displayBlocks();
   }
 
+  // creates the first block in the chain
   createGenesisBlock() {
     const newBlock = new Block(
       0,
@@ -53,10 +57,12 @@ class Blockchain {
     return newBlock;
   }
 
+  // returns the latest block in the chain
   getLatestBlock() {
     return this.chain[this.chain.length - 1];
   }
 
+  // generates new block, adds it to the chain, and calls displayBlocks
   generateNextBlock(timestamp, data) {
     const index = this.getLatestBlock().index + 1;
     const newBlock = new Block(
@@ -72,7 +78,10 @@ class Blockchain {
 
   displayBlocks() {
     containerApp.innerHTML = "";
+    // thisInst is the instance of the class Blockchain
     const thisInst = this;
+
+    // Traverse the chain and create html elements for each block and display them
     this.chain.forEach(function (block, i) {
       const html = `
     <div data-index=${
@@ -173,10 +182,13 @@ class Blockchain {
       containerApp.insertAdjacentHTML("beforeend", html);
     });
 
+    // Select all the html blocks
     const allBlocks = document.querySelectorAll(".eachBlock");
 
+    // Select all the mine buttons
     const btnMine = document.querySelectorAll(".btn-mine");
 
+    // On every mine button click, find the block and its previous block and its corresponding html block, take value from html input and save it in the block, reassign previous hash and mine the block, recalculate the hash of all the blocks after the mined block, call displayBlocks() to display the new blocks
     btnMine.forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         const block = thisInst.chain.find(
@@ -206,6 +218,7 @@ class Blockchain {
       });
     });
 
+    // On all the data inputs, if the value changes, change the data of the corresponding block and recalculate the hash of all the blocks after the changed block, call displayBlocks() to display the new blocks
     allBlocks.forEach(function (htmlBlock) {
       htmlBlock.addEventListener("change", function (e) {
         const hash = this.querySelector("#hash").dataset.value;
@@ -222,23 +235,6 @@ class Blockchain {
         }
         thisInst.displayBlocks();
       });
-
-      /* $(htmlBlock).on("input", function (e) {
-        console.log(e.target.value);
-        const hash = this.querySelector("#hash").dataset.value;
-        const block = thisInst.chain.find(
-          (block) => block.originalHash === hash
-        );
-        block.data = this.firstElementChild.lastElementChild.value;
-        block.hash = block.calculateHash();
-        const index = block.index;
-        for (let i = index + 1; i < thisInst.chain.length; i++) {
-          console.log();
-          thisInst.chain[i].previousHash = thisInst.chain[i - 1].hash;
-          thisInst.chain[i].hash = thisInst.chain[i].calculateHash();
-        }
-        thisInst.displayBlocks();
-      }); */
     });
   }
 }
